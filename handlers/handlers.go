@@ -7,52 +7,27 @@ import (
 )
 
 func HelloHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Hello, world!\n")
-	} else {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Hello, world!\n")
 }
 
 func PostArticleHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Artcle... \n")
-	} else {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Artcle... \n")
 }
 
 func ListArticleHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Article List\n")
-	} else {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Article List\n")
 }
 
 func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		articleID := 1
-		resString := fmt.Sprintf("Article No.%d\n", articleID)
-		io.WriteString(w, resString)
-	} else {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-	}
-
+	articleID := 1
+	resString := fmt.Sprintf("Article No.%d\n", articleID)
+	io.WriteString(w, resString)
 }
 
 func NiceArticleHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Nice...\n")
-	} else {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Nice...\n")
 }
 
 func CommentHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Comment...\n")
-	} else {
-		http.Error(w, "Invalid Method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Comment...\n")
 }
