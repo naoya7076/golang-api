@@ -12,7 +12,7 @@ func main() {
 	http.HandleFunc("/hello", handlers.HelloHandler)
 	http.HandleFunc("/article", handlers.PostArticleHandler)
 	http.HandleFunc("/article/list", handlers.ListArticleHandler)
-	http.HandleFunc("/article/1", handlers.FirstArticleHandler)
+	http.HandleFunc("/article/1", handlers.ArticleDetailHandler)
 	http.HandleFunc("/article/nice", handlers.NiceArticleHandler)
 	http.HandleFunc("/comment", handlers.CommentHandler)
 

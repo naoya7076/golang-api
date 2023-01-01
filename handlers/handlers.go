@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"io"
 	"net/http"
 )
@@ -17,8 +18,10 @@ func ListArticleHandler(w http.ResponseWriter, req *http.Request) {
 	io.WriteString(w, "Article List\n")
 }
 
-func FirstArticleHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Article No.1\n")
+func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
+	articleID := 1
+	resString := fmt.Sprintf("Article No.%d\n", articleID)
+	io.WriteString(w, resString)
 }
 
 func NiceArticleHandler(w http.ResponseWriter, req *http.Request) {
