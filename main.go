@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -21,12 +19,6 @@ func main() {
 	r.HandleFunc("/comment", handlers.CommentHandler).Methods(http.MethodPost)
 
 	log.Println("server start at port 8080")
-	// log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":8080", r))
 
-	jsonData, err := json.Marshal(article)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Printf("%s\n", jsonData)
 }
