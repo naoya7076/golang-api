@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
 	"github.com/naoya7076/golang-api/models"
 )
 
@@ -46,13 +45,13 @@ func ListArticleHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
-	articleID, err := strconv.Atoi(mux.Vars(req)["id"])
+	article := models.Article1
+	jsonData, err := json.Marshal(article)
 	if err != nil {
-		http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+		http.Error(w, "fail to encode json\n", http.StatusInternalServerError)
 		return
 	}
-	resString := fmt.Sprintf("Article No.%d\n", articleID)
-	io.WriteString(w, resString)
+	w.Write(jsonData)
 }
 
 func NiceArticleHandler(w http.ResponseWriter, req *http.Request) {
