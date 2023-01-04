@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"strconv"
@@ -44,7 +45,8 @@ func ListArticleHandler(w http.ResponseWriter, req *http.Request) {
 	articleList := []models.Article{article1, article2}
 	jsonData, err := json.Marshal(articleList)
 	if err != nil {
-		http.Error(w, "fail to encode json\n", http.StatusInternalServerError)
+		errMsg := fmt.Sprintf("fail to encode json (pagee %d)\n", page)
+		http.Error(w, errMsg, http.StatusInternalServerError)
 		return
 	}
 	w.Write(jsonData)
