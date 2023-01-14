@@ -12,10 +12,15 @@ func InsertArticle(db *sql.DB, article models.Article) (models.Article, error) {
 	insert into articles (title, contents, username, nice, created_at) values
 	(?, ?, ? 0, now()`
 
-	_, err := db.Exec(sqlStr, article.Title, article.Contents, article.UserName)
+	var newArticle models.Article
+	newArticle.Title, newArticle.Contents, newArticle.UserName = article.Title, article.Contents, article.UserName
+	result, err := db.Exec(sqlStr, article.Title, article.Contents, article.UserName)
 	if err != nil {
 		fmt.Println(err)
-		return article, err
+		return models.Article{}, err
 	}
-	return article, nil
+	id, _ := result.LastInsertId()
+	newArticle.ID = int(id)
+
+	return newArticle, nil
 }
