@@ -7,6 +7,8 @@ import (
 	"github.com/naoya7076/golang-api/models"
 )
 
+const articleNumPerPage = 5
+
 func InsertArticle(db *sql.DB, article models.Article) (models.Article, error) {
 	const sqlStr = `
 	insert into articles (title, contents, username, nice, created_at) values
@@ -30,7 +32,7 @@ func SelectArticleList(db *sql.DB, page int) ([]models.Article, error) {
 		select article_id, title, contents, username, nice
 		from articles
 		limit ? offset ?;`
-	offset := (page-1)*5 + 1
+	offset := (page - 1) * articleNumPerPage
 	rows, err := db.Query(sqlStr, page, offset)
 	if err != nil {
 		fmt.Println(err)
