@@ -24,3 +24,35 @@ func InsertArticle(db *sql.DB, article models.Article) (models.Article, error) {
 
 	return newArticle, nil
 }
+
+func SelectArticleList(db *sql.DB, page int) ([]models.Article, error) {
+	const sqlStr = `
+		select article_id, title, contents, username, nice
+		from articles
+		limit ? offset ?;`
+	offset := (page-1)*5 + 1
+	rows, err := db.Query(sqlStr, page, offset)
+	if err != nil {
+		fmt.Println(err)
+		return []models.Article{}, err
+	}
+	defer rows.Close()
+
+	articleArray := make([]models.Article, 0)
+	for rows.Next() {
+		var article models.Article
+		var createdTime sql.NullTime
+		err := rows.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
+
+		if createdTime.Valid {
+			article.CreatedAt = createdTime.Time
+		}
+
+		if err != nil {
+			return []models.Article{}, err
+		} else {
+			articleArray = append(articleArray, article)
+		}
+	}
+	return articleArray, nil
+}
