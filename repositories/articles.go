@@ -79,4 +79,5 @@ func SelectArticleDetail(db *sql.DB, articleID int) (models.Article, error) {
 	if createdTime.Valid {
 		article.CreatedAt = createdTime.Time
 	}
+	return article, nil
 }
