@@ -23,3 +23,28 @@ func InsertComment(db *sql.DB, comment models.Comment) (models.Comment, error) {
 	newComment.CommentID = int(id)
 	return newComment, nil
 }
+
+func SelectCommentList(db sql.DB, articleID int) ([]models.Comment, error) {
+	const sqlStr = `
+		select *
+		from comments
+		where article_id = ?;
+	`
+	rows, err := db.Query(sqlStr, articleID)
+	if err != nil {
+		return []models.Comment{}, err
+	}
+	defer rows.Close()
+
+	commentArray := make([]models.Comment, 0)
+	for rows.Next() {
+		var comment models.Comment
+		err := rows.Scan(&comment.ArticleID, &comment.Message, &comment.CreatedAt)
+		if err != nil {
+			return []models.Comment{}, err
+		} else {
+			commentArray = append(commentArray, comment)
+		}
+	}
+	return commentArray, nil
+}
