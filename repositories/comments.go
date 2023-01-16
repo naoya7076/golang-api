@@ -39,7 +39,11 @@ func SelectCommentList(db sql.DB, articleID int) ([]models.Comment, error) {
 	commentArray := make([]models.Comment, 0)
 	for rows.Next() {
 		var comment models.Comment
-		err := rows.Scan(&comment.ArticleID, &comment.Message, &comment.CreatedAt)
+		var createdTime sql.NullTime
+		err := rows.Scan(&comment.CommentID, &comment.ArticleID, &comment.Message, &createdTime)
+		if createdTime.Valid {
+			comment.CreatedAt = createdTime.Time
+		}
 		if err != nil {
 			return []models.Comment{}, err
 		} else {
