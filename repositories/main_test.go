@@ -3,12 +3,24 @@ package repositories_test
 import (
 	"database/sql"
 	"fmt"
+	"os"
+	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 var testDB *sql.DB
 
+func TestMain(m *testing.M) {
+	err := setup()
+	if err != nil {
+		os.Exit(1)
+	}
+
+	m.Run()
+
+	teardown()
+}
 func setup() error {
 	dbUser := "docker"
 	dbPassword := "docker"
@@ -20,6 +32,7 @@ func setup() error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
