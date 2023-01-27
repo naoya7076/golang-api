@@ -33,7 +33,7 @@ func SelectArticleList(db *sql.DB, page int) ([]models.Article, error) {
 		from articles
 		limit ? offset ?;`
 	offset := (page - 1) * articleNumPerPage
-	rows, err := db.Query(sqlStr, page, offset)
+	rows, err := db.Query(sqlStr, articleNumPerPage, offset)
 	if err != nil {
 		fmt.Println(err)
 		return []models.Article{}, err
@@ -44,7 +44,7 @@ func SelectArticleList(db *sql.DB, page int) ([]models.Article, error) {
 	for rows.Next() {
 		var article models.Article
 		var createdTime sql.NullTime
-		err := rows.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
+		err := rows.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum)
 
 		if createdTime.Valid {
 			article.CreatedAt = createdTime.Time
