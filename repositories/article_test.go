@@ -98,3 +98,17 @@ func TestInsertArticle(t *testing.T) {
 		testDB.Exec(sqlStr, article.Title, article.Contents, article.UserName)
 	})
 }
+
+func TestUpdateNiceNum(t *testing.T) {
+	expectedNiceNum := 4
+	if err := repositories.UpdateNiceNum(testDB, 1); err != nil {
+		t.Error(err)
+	}
+	article, err := repositories.SelectArticleDetail(testDB, 1)
+	if err != nil {
+		t.Error(err)
+	}
+	if article.NiceNum != expectedNiceNum {
+		t.Errorf("want %d but got %d nicenum\n", expectedNiceNum, article.NiceNum)
+	}
+}
