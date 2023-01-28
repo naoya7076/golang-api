@@ -100,15 +100,19 @@ func TestInsertArticle(t *testing.T) {
 }
 
 func TestUpdateNiceNum(t *testing.T) {
-	expectedNiceNum := 4
-	if err := repositories.UpdateNiceNum(testDB, 1); err != nil {
-		t.Error(err)
-	}
-	article, err := repositories.SelectArticleDetail(testDB, 1)
+	articleID := 1
+	before, err := repositories.SelectArticleDetail(testDB, articleID)
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
-	if article.NiceNum != expectedNiceNum {
-		t.Errorf("want %d but got %d nicenum\n", expectedNiceNum, article.NiceNum)
+	if err = repositories.UpdateNiceNum(testDB, articleID); err != nil {
+		t.Fatal(err)
+	}
+	after, err := repositories.SelectArticleDetail(testDB, articleID)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if after.NiceNum-before.NiceNum != 1 {
+		t.Error("fail to update nice num")
 	}
 }
