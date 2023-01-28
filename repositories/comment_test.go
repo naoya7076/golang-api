@@ -26,13 +26,13 @@ func TestInsertComment(t *testing.T) {
 		ArticleID: 1,
 		Message:   "test comment",
 	}
-	expectedCommentNum := 3
+	expectedCommentID := 3
 	newComment, err := repositories.InsertComment(testDB, comment)
 	if err != nil {
 		t.Error(err)
 	}
-	if newComment.CommentID != expectedCommentNum {
-		t.Errorf("new comment id is expected %d but got %d", expectedCommentNum, newComment.CommentID)
+	if newComment.CommentID != expectedCommentID {
+		t.Errorf("new comment id is expected %d but got %d", expectedCommentID, newComment.CommentID)
 	}
 	t.Cleanup(func() {
 		const sqlStr = `
