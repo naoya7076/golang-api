@@ -5,6 +5,7 @@ import (
 
 	"github.com/naoya7076/golang-api/models"
 	"github.com/naoya7076/golang-api/repositories"
+	"github.com/naoya7076/golang-api/repositories/testdata"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -16,22 +17,10 @@ func TestSelectArticleDetail(t *testing.T) {
 	}{
 		{
 			testTitle: "subtest1",
-			expected: models.Article{
-				ID:       1,
-				Title:    "firstPost",
-				Contents: "This is my first blog",
-				UserName: "naoya7076",
-				NiceNum:  3,
-			},
+			expected:  testdata.ArticleTestData[0],
 		}, {
 			testTitle: "subtest2",
-			expected: models.Article{
-				ID:       2,
-				Title:    "2nd",
-				Contents: "Second blog post",
-				UserName: "naoya7076",
-				NiceNum:  4,
-			},
+			expected:  testdata.ArticleTestData[1],
 		},
 	}
 
@@ -65,7 +54,7 @@ func TestSelectArticleDetail(t *testing.T) {
 }
 
 func TestSelectArticleList(t *testing.T) {
-	expectedNum := 3
+	expectedNum := 2
 	got, err := repositories.SelectArticleList(testDB, 1)
 	if err != nil {
 		t.Fatal(err)
@@ -82,7 +71,7 @@ func TestInsertArticle(t *testing.T) {
 		Contents: "test",
 		UserName: "naoya7076",
 	}
-	expectedArticleNum := 4
+	expectedArticleNum := 3
 	newArticle, err := repositories.InsertArticle(testDB, article)
 	if err != nil {
 		t.Error(err)
