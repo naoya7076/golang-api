@@ -115,4 +115,10 @@ func TestUpdateNiceNum(t *testing.T) {
 	if after.NiceNum-before.NiceNum != 1 {
 		t.Error("fail to update nice num")
 	}
+	t.Cleanup(func() {
+		const sqlStr = `
+			update articles set nice = nice - 1 where article_id = ?
+		`
+		testDB.Exec(sqlStr, articleID)
+	})
 }
