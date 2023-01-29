@@ -24,7 +24,7 @@ func InsertComment(db *sql.DB, comment models.Comment) (models.Comment, error) {
 	return newComment, nil
 }
 
-func SelectCommentList(db sql.DB, articleID int) ([]models.Comment, error) {
+func SelectCommentList(db *sql.DB, articleID int) ([]models.Comment, error) {
 	const sqlStr = `
 		select *
 		from comments
