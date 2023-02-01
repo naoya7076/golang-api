@@ -5,17 +5,12 @@ import (
 	"github.com/naoya7076/golang-api/repositories"
 )
 
-func GetArticleService(articleID int) (models.Article, error) {
-	db, err := connectDB()
+func (s *MyAppService) GetArticleService(articleID int) (models.Article, error) {
+	article, err := repositories.SelectArticleDetail(s.db, articleID)
 	if err != nil {
 		return models.Article{}, err
 	}
-	defer db.Close()
-	article, err := repositories.SelectArticleDetail(db, articleID)
-	if err != nil {
-		return models.Article{}, err
-	}
-	commentList, err := repositories.SelectCommentList(db, articleID)
+	commentList, err := repositories.SelectCommentList(s.db, articleID)
 	if err != nil {
 		return models.Article{}, err
 	}
