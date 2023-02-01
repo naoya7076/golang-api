@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 	"strconv"
 
@@ -17,10 +16,6 @@ type MyAppController struct {
 
 func NewMyAppController(s *services.MyAppService) *MyAppController {
 	return &MyAppController{service: s}
-}
-
-func HelloHandler(w http.ResponseWriter, req *http.Request) {
-	io.WriteString(w, "Hello, world!\n")
 }
 
 func (c *MyAppController) PostArticleHandler(w http.ResponseWriter, req *http.Request) {
@@ -68,7 +63,7 @@ func (c *MyAppController) ArticleDetailHandler(w http.ResponseWriter, req *http.
 		return
 	}
 
-	article, err := services.GetArticleService(articleId)
+	article, err := c.service.GetArticleService(articleId)
 	if err != nil {
 		http.Error(w, "fail internal exec\n", http.StatusInternalServerError)
 		return
