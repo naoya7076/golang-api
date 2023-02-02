@@ -28,8 +28,9 @@ func main() {
 		return
 	}
 	ser := services.NewMyAppService(db)
-	con := controllers.NewMyAppController(ser)
-	r := routers.NewRouter(con)
+	aCon := controllers.NewArticleController(ser)
+	cCon := controllers.NewCommentController(ser)
+	r := routers.NewRouter(aCon, cCon)
 
 	log.Println("server start at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
