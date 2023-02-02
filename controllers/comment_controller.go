@@ -16,7 +16,7 @@ func NewCommentController(s services.CommentServicer) *CommentController {
 	return &CommentController{service: s}
 }
 
-func (c *MyAppController) CommentHandler(w http.ResponseWriter, req *http.Request) {
+func (c *CommentController) CommentHandler(w http.ResponseWriter, req *http.Request) {
 	var reqComment models.Comment
 	if err := json.NewDecoder(req.Body).Decode(&reqComment); err != nil {
 		http.Error(w, "fail to decode json\n", http.StatusBadRequest)
