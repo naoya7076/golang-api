@@ -53,6 +53,7 @@ func (s *MyAppService) GetArticleListService(page int) ([]models.Article, error)
 
 func (s *MyAppService) PostNiceService(article models.Article) (models.Article, error) {
 	if err := repositories.UpdateNiceNum(s.db, article.ID); err != nil {
+		err := apperrors.UpdateDataFailed.Wrap(err, "fail to update data")
 		return models.Article{}, err
 	}
 	return article, nil
