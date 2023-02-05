@@ -10,6 +10,8 @@ const (
 	NAData           ErrCode = "S003"
 	NoTargetData     ErrCode = "S004"
 	UpdateDataFailed ErrCode = "S005"
+
+	ReqBodyDecodeFailed ErrCode = "R001"
 )
 
 func (code ErrCode) Wrap(err error, message string) error {
