@@ -1,6 +1,10 @@
 package services
 
 import (
+	"database/sql"
+	"errors"
+
+	"github.com/naoya7076/golang-api/apperrors"
 	"github.com/naoya7076/golang-api/models"
 	"github.com/naoya7076/golang-api/repositories"
 )
@@ -8,10 +12,16 @@ import (
 func (s *MyAppService) GetArticleService(articleID int) (models.Article, error) {
 	article, err := repositories.SelectArticleDetail(s.db, articleID)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = apperrors.NAData.Wrap(err, "no data")
+			return models.Article{}, err
+		}
+		err = apperrors.GetDataFailed.Wrap(err, "fail to get data")
 		return models.Article{}, err
 	}
 	commentList, err := repositories.SelectCommentList(s.db, articleID)
 	if err != nil {
+		err = apperrors.GetDataFailed.Wrap(err, "fail to get data")
 		return models.Article{}, err
 	}
 
@@ -22,6 +32,7 @@ func (s *MyAppService) GetArticleService(articleID int) (models.Article, error) 
 func (s *MyAppService) PostArticleService(article models.Article) (models.Article, error) {
 	newArticle, err := repositories.InsertArticle(s.db, article)
 	if err != nil {
+		err = apperrors.InsertDataFailed.Wrap(err, "failed to record data")
 		return models.Article{}, err
 	}
 	return newArticle, nil
