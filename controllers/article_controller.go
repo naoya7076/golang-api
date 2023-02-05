@@ -34,7 +34,7 @@ func (c *ArticleController) PostArticleHandler(w http.ResponseWriter, req *http.
 	json.NewEncoder(w).Encode(article)
 }
 
-func (c *ArticleController) ListArticleHandler(w http.ResponseWriter, req *http.Request) {
+func (c *ArticleController) ArticleListHandler(w http.ResponseWriter, req *http.Request) {
 	queryMap := req.URL.Query()
 
 	var page int
