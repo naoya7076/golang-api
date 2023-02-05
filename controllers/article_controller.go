@@ -43,6 +43,7 @@ func (c *ArticleController) ListArticleHandler(w http.ResponseWriter, req *http.
 		page, err = strconv.Atoi(p[0])
 
 		if err != nil {
+			err = apperrors.BadParams.Wrap(err, "query param must be number")
 			http.Error(w, "Invalid query parameter", http.StatusBadRequest)
 			return
 		}
@@ -61,6 +62,7 @@ func (c *ArticleController) ListArticleHandler(w http.ResponseWriter, req *http.
 func (c *ArticleController) ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
 	articleId, err := strconv.Atoi(mux.Vars(req)["id"])
 	if err != nil {
+		err = apperrors.BadParams.Wrap(err, "query param must be number")
 		http.Error(w, "Invalid query parameter", http.StatusBadRequest)
 		return
 	}

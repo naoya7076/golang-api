@@ -12,6 +12,7 @@ const (
 	UpdateDataFailed ErrCode = "S005"
 
 	ReqBodyDecodeFailed ErrCode = "R001"
+	BadParams           ErrCode = "R002"
 )
 
 func (code ErrCode) Wrap(err error, message string) error {
