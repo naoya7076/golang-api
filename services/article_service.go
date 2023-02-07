@@ -3,7 +3,6 @@ package services
 import (
 	"database/sql"
 	"errors"
-	"sync"
 
 	"github.com/naoya7076/golang-api/apperrors"
 	"github.com/naoya7076/golang-api/models"
@@ -13,36 +12,48 @@ import (
 func (s *MyAppService) GetArticleService(articleID int) (models.Article, error) {
 	var article models.Article
 	var commentList []models.Comment
-	var articleGerErr, commentGetErr error
+	var articleGetErr, commentGetErr error
 
-	var amu sync.Mutex
-	var cmu sync.Mutex
+	type articleResult struct {
+		article models.Article
+		err     error
+	}
+	articleChan := make(chan articleResult)
+	defer close(articleChan)
 
-	var wg sync.WaitGroup
-	wg.Add(2)
+	go func(ch chan<- articleResult, db *sql.DB, articleID int) {
+		article, err := repositories.SelectArticleDetail(db, articleID)
+		ch <- articleResult{article, err}
+	}(articleChan, s.db, articleID)
 
-	go func(db *sql.DB, articleID int) {
-		defer wg.Done()
-		amu.Lock()
-		article, articleGerErr = repositories.SelectArticleDetail(db, articleID)
-		amu.Unlock()
-	}(s.db, articleID)
+	type commentResult struct {
+		commentList []models.Comment
+		err         error
+	}
+	commentChan := make(chan commentResult)
+	defer close(commentChan)
 
-	go func(db *sql.DB, articleID int) {
-		defer wg.Done()
-		cmu.Lock()
-		commentList, commentGetErr = repositories.SelectCommentList(db, articleID)
-		cmu.Unlock()
-	}(s.db, articleID)
+	go func(ch chan<- commentResult, db *sql.DB, articleID int) {
+		commentList, err := repositories.SelectCommentList(db, articleID)
+		ch <- commentResult{commentList, err}
+	}(commentChan, s.db, articleID)
 
-	wg.Wait()
-	if articleGerErr != nil {
-		if errors.Is(articleGerErr, sql.ErrNoRows) {
-			articleGerErr = apperrors.NAData.Wrap(articleGerErr, "no data")
-			return models.Article{}, articleGerErr
+	for i := 0; i < 2; i++ {
+		select {
+		case ar := <-articleChan:
+			article, articleGetErr = ar.article, ar.err
+		case cr := <-commentChan:
+			commentList, commentGetErr = cr.commentList, cr.err
 		}
-		articleGerErr = apperrors.GetDataFailed.Wrap(articleGerErr, "fail to get data")
-		return models.Article{}, articleGerErr
+	}
+
+	if articleGetErr != nil {
+		if errors.Is(articleGetErr, sql.ErrNoRows) {
+			articleGetErr = apperrors.NAData.Wrap(articleGetErr, "no data")
+			return models.Article{}, articleGetErr
+		}
+		articleGetErr = apperrors.GetDataFailed.Wrap(articleGetErr, "fail to get data")
+		return models.Article{}, articleGetErr
 	}
 
 	if commentGetErr != nil {
