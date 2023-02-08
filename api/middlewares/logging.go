@@ -3,6 +3,8 @@ package middlewares
 import (
 	"log"
 	"net/http"
+
+	"github.com/naoya7076/golang-api/common"
 )
 
 type resLoggingWriter struct {
@@ -25,7 +27,7 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 		traceID := newTraceID()
 		log.Printf("[%d]%s %s\n", traceID, req.RequestURI, req.Method)
 
-		ctx := SetTraceID(req.Context(), traceID)
+		ctx := common.SetTraceID(req.Context(), traceID)
 		req = req.WithContext(ctx)
 		rlw := NewResLoggingWriter(w)
 

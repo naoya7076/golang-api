@@ -8,31 +8,13 @@ import (
 	"strings"
 
 	"github.com/naoya7076/golang-api/apperrors"
+	"github.com/naoya7076/golang-api/common"
 	"google.golang.org/api/idtoken"
 )
 
 var (
 	googleClientID = os.Getenv("GOOGLE_CLIENT_ID")
 )
-
-type userNameKey struct{}
-
-func GetUserName(ctx context.Context) string {
-	id := ctx.Value(userNameKey{})
-	if usernameStr, ok := id.(string); ok {
-		return usernameStr
-	}
-	return ""
-}
-
-func SetUserName(req *http.Request, name string) *http.Request {
-	ctx := req.Context()
-
-	ctx = context.WithValue(ctx, userNameKey{}, name)
-	req = req.WithContext(ctx)
-
-	return req
-}
 
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -73,7 +55,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		req = SetUserName(req, name.(string))
+		req = common.SetUserName(req, name.(string))
 
 		next.ServeHTTP(w, req)
 	})
