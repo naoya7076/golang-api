@@ -29,6 +29,8 @@ func ErrorHandler(w http.ResponseWriter, req *http.Request, err error) {
 		statusCode = http.StatusNotFound
 	case NoTargetData, ReqBodyDecodeFailed, BadParams:
 		statusCode = http.StatusBadRequest
+	case RequiredAuthorizationHeader, Unauthorized:
+		statusCode = http.StatusUnauthorized
 	default:
 		statusCode = http.StatusInternalServerError
 	}
