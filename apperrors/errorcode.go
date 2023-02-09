@@ -17,6 +17,7 @@ const (
 	RequiredAuthorizationHeader ErrCode = "A001"
 	CannotMakeValidator         ErrCode = "A002"
 	Unauthorized                ErrCode = "A003"
+	NotMatchUser                ErrCode = "A004"
 )
 
 func (code ErrCode) Wrap(err error, message string) error {
